@@ -8,4 +8,8 @@ helm upgrade -i yetibot --namespace yetibot .
 
 ## Configuration
 
-## Secrets
+Yetibot can be configured purely from ENV or from a config file. It mostly
+consists of API keys and other secrets, so it's up to the user to securely
+provide them. See [Configuration
+docs](https://github.com/yetibot/yetibot.core/blob/master/doc/CONFIGURATION.md)
+to learn more.
