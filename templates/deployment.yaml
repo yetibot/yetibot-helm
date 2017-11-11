@@ -32,6 +32,16 @@ spec:
               port: {{ .Values.service.internalPort }}
           resources:
 {{ toYaml .Values.resources | indent 12 }}
+          env:
+            - name: CONFIG_PATH
+              value: /config/yetibot.edn
+          volumeMounts:
+            - name: yetibot-config
+              mountPath: /config
+      volumes:
+        - name: yetibot-config
+          configMap:
+            name: {{ template "fullname" . }}
     {{- if .Values.nodeSelector }}
       nodeSelector:
 {{ toYaml .Values.nodeSelector | indent 8 }}
