@@ -1,6 +1,7 @@
 # Yetibot Helm
 
-Install Yetibot on your Kubernetes cluster. Edit `values.yaml` to customize.
+Install Yetibot on your Kubernetes cluster. Edit [`values.yaml`](values.yaml)
+and `templates/config.yaml` to customize.
 
 ```bash
 helm upgrade -i yetibot --namespace yetibot .
