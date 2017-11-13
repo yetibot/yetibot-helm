@@ -1,17 +1,7 @@
 # Yetibot Helm
 
-Install Yetibot on your Kubernetes cluster. Edit [`values.yaml`](values.yaml) to
-customize.
-
-```bash
-helm upgrade -i yetibot --namespace yetibot .
-```
-
-## Dry run
-
-```bash
-helm upgrade --debug --dry-run -i yetibot --namespace yetibot .
-```
+Yetibot Helm makes it easy to install Yetibot on a
+[Kubernetes](https://kubernetes.io/) cluster.
 
 ## Configuration
 
@@ -28,4 +18,16 @@ mounted into the pod with a `CONFIG_PATH` env var set to the mounted location.
 ```bash
 cp values.yaml values-overrides.yaml
 helm upgrade --debug --dry-run -i -f values-overrides.yaml yetibot --namespace yetibot .
+```
+
+## Usage
+
+```bash
+helm upgrade -i yetibot --namespace yetibot .
+```
+
+### Dry run
+
+```bash
+helm upgrade --debug --dry-run -i yetibot --namespace yetibot .
 ```
