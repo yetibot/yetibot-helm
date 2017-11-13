@@ -24,3 +24,8 @@ to learn more.
 As an example, this chart includes a [`config.yaml`](templates/config.yaml) with
 sample config populated from `values.yaml` (which you can override) that's
 mounted into the pod with a `CONFIG_PATH` env var set to the mounted location.
+
+```bash
+cp values.yaml values-overrides.yaml
+helm upgrade --debug --dry-run -i -f values-overrides.yaml yetibot --namespace yetibot .
+```
