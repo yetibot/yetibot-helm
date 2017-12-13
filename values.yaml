@@ -93,3 +93,13 @@ config: |
     :wordnik {:key ""},
     :imgflip {:username "", :password ""},
     :eval {:priv ["U123123" "~awesomeperson"]}}}
+
+# configure postgresql sub chart
+postgresql:
+  persistence:
+    # you may need to set this if you don't have a default storage class:
+    # storageClass: fast
+    size: 16Gi
+  postgresDatabase: yetibot
+  postgresPassword: yetibot
+  postgresUser: yetibot

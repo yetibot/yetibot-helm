@@ -31,3 +31,7 @@ helm upgrade -i yetibot --namespace yetibot .
 ```bash
 helm upgrade --debug --dry-run -i yetibot --namespace yetibot .
 ```
+
+## Postgres
+
+Yetibot requires a Postgres instance.
