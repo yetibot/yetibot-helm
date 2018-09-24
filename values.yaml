@@ -4,7 +4,7 @@
 replicaCount: 1
 image:
   repository: devth/yetibot
-  tag: snapshot
+  tag: 0.4.28
   pullPolicy: Always
 service:
   name: yetibot
@@ -44,7 +44,8 @@ config: |
     :google {:api {:key ""}
              :custom {:search {:engine {:id ""}}}
              :options {:safe "high"}}
-    :db {:datomic {:url "datomic:mem://yetibot"}},
+    :db {:url "postgresql://localhost:5432/yetibot"
+         :table {:prefix "yetibot_"}},
     :twitter {:search {:lang "en"},
               :consumer {:secret "", :key ""},
               :secret "",
@@ -93,6 +94,7 @@ config: |
     :wordnik {:key ""},
     :imgflip {:username "", :password ""},
     :eval {:priv ["U123123" "~awesomeperson"]}}}
+
 
 # configure postgresql sub chart
 postgresql:

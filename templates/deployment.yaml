@@ -23,12 +23,12 @@ spec:
             - containerPort: {{ .Values.service.internalPort }}
           livenessProbe:
             httpGet:
-              path: /
+              path: /healthz
               port: {{ .Values.service.internalPort }}
             initialDelaySeconds: 45
           readinessProbe:
             httpGet:
-              path: /
+              path: /healthz
               port: {{ .Values.service.internalPort }}
           resources:
 {{ toYaml .Values.resources | indent 12 }}
