@@ -11,4 +11,4 @@ data:
   # Sample Yetibot config. Populate these values (at minimum configure an
   # adapter) with your own secrets.
   yetibot.edn: |
-{{.Values.config | indent 4 }}
+    {{.Values.yetibot.edn | indent 4 }}

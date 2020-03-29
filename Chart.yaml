@@ -1,4 +1,12 @@
-apiVersion: v1
+apiVersion: v2
 description: A Helm chart for Kubernetes
 name: yetibot
-version: 0.4.45
+version: 0.1.2
+icon: https://yetibot.com/img/yetibot_logo.svg
+maintainers: # (optional)
+  - name: Trevor Hartman
+    url: https://devth.com
+dependencies:
+  - name: postgresql
+    version: ~8.3.3
+    repository: '@stable'
