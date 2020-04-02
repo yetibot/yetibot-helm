@@ -2,51 +2,107 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 replicaCount: 1
+
 image:
   repository: yetibot/yetibot
   pullPolicy: Always
-  # Note: tag is always {{ .Chart.Version }}
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name:
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
 service:
   name: yetibot
-  type: ClusterIP
-  externalPort: 80
-  internalPort: 3003
+  type: LoadBalancer
+  port: 80
+
 ingress:
   enabled: false
-  # Used to create an Ingress record.
-  hosts:
-    # - yetibot-example.local
-  annotations:
+  annotations: {}
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
-  tls:
-    # Secrets must be manually created in the namespace.
-    # - secretName: chart-example-tls
-    #   hosts:
-    #     - chart-example.local
+  hosts:
+    - host: chart-example.local
+      paths: []
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+
 resources: {}
-  # We usually recommend not to specify default resources and to leave this as a
-  # conscious choice for the user. This also increases chances charts run on
-  # environments with little resources, such as Minikube. If you do want to
-  # specify resources, uncomment the following lines, adjust them as necessary,
-  # and remove the curly braces after 'resources:'.
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   # limits:
-  #  cpu: 100m
-  #  memory: 128Mi
+  #   cpu: 100m
+  #   memory: 128Mi
   # requests:
-  #  cpu: 100m
-  #  memory: 128Mi
+  #   cpu: 100m
+  #   memory: 128Mi
 
-# use https://github.com/yetibot/yetibot.core/blob/master/config/config.sample.edn
-# as an example of `yetibot.edn` - fill in desired values
-yetibot.edn: {}
+nodeSelector: {}
 
-# configure postgresql sub chart
+tolerations: []
+
+affinity: {}
+
+
+# Yetibot config
+
+# Use env vars to populate any of Yetibot's configuration options
+# See all options at:
+# https://github.com/yetibot/yetibot.core/blob/master/config/sample.env
+
+yetibot:
+  env:
+    # Ensure Yetibot ignores all `YETIBOT_` env vars, since Kubernetes will
+    # expose a bunch of them inside the pod. If you remove this, Yetibot will
+    # throw exceptions at runtime and the pod will CrashLoop.
+    YETIBOT_ENV_PREFIX: yb
+    YB_ADAPTERS_MYIRC_TYPE: irc
+    YB_ADAPTERS_MYIRC_USERNAME: yetihelm
+    YB_ADAPTERS_MYIRC_HOST: chat.freenode.net
+    YB_ADAPTERS_MYIRC_PORT: "7070"
+    YB_ADAPTERS_MYIRC_SSL: "true"
+    YB_ADAPTERS_MYIRC_SSL: "true"
+    YB_DB_URL: "jdbc:postgresql://yetibot:yetibot@yetibot-postgresql:5432/yetibot"
+    # You must set this to the URL that you expose Yetibot on in order for the
+    # dashboard to work
+    YB_URL: ""
+
+# postgresql sub chart config:
 postgresql:
   persistence:
-    # you may need to set this if you don't have a default storage class:
+    # you may need to set a storageClass if you don't have a default storage
+    # class:
     # storageClass: fast
     size: 16Gi
-  postgresDatabase: yetibot
-  postgresPassword: yetibot
-  postgresUser: yetibot
+  postgresqlDatabase: yetibot
+  postgresqlPassword: yetibot
+  postgresqlUsername: yetibot
+  resources:
+    limits:
+      memory: 500Mi
+      cpu: 1000m

@@ -1,48 +1,117 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "fullname" . }}
+  name: {{ include "yetibot.fullname" . }}
   labels:
-    app: {{ template "name" . }}
-    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    {{- include "yetibot.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "yetibot.selectorLabels" . | nindent 6 }}
   template:
     metadata:
+      annotations:
+        # roll new pods when config changes
+        checksum/config: {{ include (print $.Template.BasePath "/config.yaml") . | sha256sum }}
       labels:
-        app: {{ template "name" . }}
-        release: {{ .Release.Name }}
+        {{- include "yetibot.selectorLabels" . | nindent 8 }}
     spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ include "yetibot.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.image.repository }}:{{ .Chart.Version }}"
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          # pull in every KV from the configmap to use as environment
+          envFrom:
+          - configMapRef:
+              name: {{ include "yetibot.fullname" . }}
           ports:
-            - containerPort: {{ .Values.service.internalPort }}
+            - name: http
+              containerPort: 3003
+              protocol: TCP
           livenessProbe:
             httpGet:
               path: /healthz
-              port: {{ .Values.service.internalPort }}
-            initialDelaySeconds: 45
+              port: http
+            failureThreshold: 3
+            periodSeconds: 30
+            initialDelaySeconds: 60
+          # requires K8S 1.16+
+          # startupProbe:
+          #   httpGet:
+          #     path: /healthz
+          #     port: liveness-port
+          #   failureThreshold: 30
+          #   periodSeconds: 10
           readinessProbe:
             httpGet:
-              path: /healthz
-              port: {{ .Values.service.internalPort }}
+              path: /healthz/ready
+              port: http
           resources:
-{{ toYaml .Values.resources | indent 12 }}
-          env:
-            - name: CONFIG_PATH
-              value: /config/yetibot.edn
-          volumeMounts:
-            - name: yetibot-config
-              mountPath: /config
-      volumes:
-        - name: yetibot-config
-          configMap:
-            name: {{ template "fullname" . }}
-    {{- if .Values.nodeSelector }}
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
       nodeSelector:
-{{ toYaml .Values.nodeSelector | indent 8 }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
     {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+
+{{- /*
+
+  # spec:
+  #   replicas: {{ .Values.replicaCount }}
+  #   template:
+  #     metadata:
+  #       labels:
+  #         app: {{ template "name" . }}
+  #         release: {{ .Release.Name }}
+  #     spec:
+  #       containers:
+  #         - name: {{ .Chart.Name }}
+  #           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+  #           imagePullPolicy: {{ .Values.image.pullPolicy }}
+  #           ports:
+  #             - containerPort: {{ .Values.service.internalPort }}
+  #           livenessProbe:
+  #             httpGet:
+  #               path: /healthz
+  #               port: {{ .Values.service.internalPort }}
+  #             initialDelaySeconds: 45
+  #           readinessProbe:
+  #             httpGet:
+  #               path: /healthz
+  #               port: {{ .Values.service.internalPort }}
+  #           resources:
+  # {{ toYaml .Values.resources | indent 12 }}
+  #           env:
+  #             - name: CONFIG_PATH
+  #               value: /config/yetibot.edn
+  #           volumeMounts:
+  #             - name: yetibot-config
+  #               mountPath: /config
+  #       volumes:
+  #         - name: yetibot-config
+  #           configMap:
+  #             name: {{ template "fullname" . }}
+  #     {{- if .Values.nodeSelector }}
+  #       nodeSelector:
+  # {{ toYaml .Values.nodeSelector | indent 8 }}
+  #     {{- end }}
+
+
+*/ -}}

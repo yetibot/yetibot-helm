@@ -1,14 +1,12 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ template "fullname" . }}
+  name: {{ include "yetibot.fullname" . }}
   labels:
-    app: {{ template "fullname" . }}
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-    release: "{{ .Release.Name }}"
-    heritage: "{{ .Release.Service }}"
+    {{- include "yetibot.labels" . | nindent 4 }}
 data:
   # Sample Yetibot config. Populate these values (at minimum configure an
-  # adapter) with your own secrets.
-  yetibot.edn: |
-    {{.Values.yetibot.edn | indent 4 }}
+  # adapter) with your own config or secrets.
+  {{- range $key, $value := .Values.yetibot.env }}
+    {{ $key }}: "{{ $value }}"
+  {{- end }}
