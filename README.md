@@ -46,8 +46,21 @@ helm install . \
 ```
 
 It's recommended to copy the default [values.yaml](values.yaml) and configure it
-locally. By default this Chart configures Yetibot to connect to Freenode.net IRC
-with the username `yetihelm`.
+locally.
+
+At a minimum you need to configure at least 1 adapter. For example, to connect
+to IRC you could set:
+
+```yaml
+yetibot:
+  env:
+    YB_ADAPTERS_MYIRC_TYPE: irc
+    YB_ADAPTERS_MYIRC_USERNAME: yetihelm
+    YB_ADAPTERS_MYIRC_HOST: chat.freenode.net
+    YB_ADAPTERS_MYIRC_PORT: "7070"
+    YB_ADAPTERS_MYIRC_SSL: "true"
+    YB_ADAPTERS_MYIRC_SSL: "true"
+```
 
 `values.yaml` demonstrates a few configuration options, but see
 [sample.env](https://github.com/yetibot/yetibot.core/blob/master/config/sample.env)
