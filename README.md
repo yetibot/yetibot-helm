@@ -68,13 +68,66 @@ for the full set of all available configuration.
 
 ## Ops
 
-### psql export
+### Connect a local psql terminal
 
-TODO
+Forward the postgresql port in order to connect locally using `psql`. Note:
+we're using `6543` instead of standard `5432` in order to not interfere with any
+local Postgres instance you may be running:
 
-### psql import
+```bash
+kubectl --ns yetibot port-forward yetibot-postgresql-0 6543:5432
+```
 
-TODO
+Now connect to Postgres at:
+
+```bash
+postgresql://yetibot:yetibot@localhost:6543/yetibot
+```
+
+NB: if you changed the credentials update them in the connection string above.
+
+### Recreate the database
+
+If you want to recreate the database from scratch:
+
+```bash
+# login to the pod and psql there as an alternative to forwarding the port:
+kc exec -it yetibot-postgresql-0 psql postgresql://yetibot:yetibot@localhost:5432/yetibot
+# login with the admin postgres user instead
+kc exec -it yetibot-postgresql-0 -- psql -U postgres
+DROP DATABASE yetibot;
+CREATE DATABASE yetibot WITH OWNER = yetibot;
+```
+
+Notes:
+
+- you need to admin on the db in order to do this. This depends on how you
+  configured the `postgresql` subchart. You may need to use the `postgres` user
+  (and set a password on it).
+- if you apply new credentials configuration to the `postgresql` chart, they
+  will probably not apply unless you delete the pvc and recreate everything. See
+  [this GitHub issue](https://github.com/helm/charts/issues/16251) for more
+  context.
+
+### Database backup
+
+Follow above instructions for forwarding the `psql` port, then:
+
+```bash
+timestamp=`date +'%s'`
+filename="$timestamp-yetibot-backup.sql"
+echo $filename
+pg_dump postgresql://yetibot:yetibot@localhost:6543/yetibot > "$filename"
+```
+
+### Database restore
+
+Follow above instructions for forwarding the `psql` port, then:
+
+```bash
+filename="" # ensure this is a path to a valid .sql file
+psql postgresql://yetibot:yetibot@localhost:6543/yetibot < $filename
+```
 
 ## Dev setup
 
@@ -136,14 +189,14 @@ After installing
 
 ```bash
 
-helm install yetibot . \
+helm install yetibot charts/yetibot \
   --namespace yetibot-test \
   --dry-run
 
 # it can be useful to inspect only a subset of the output. For example, if we
 # want to look at the configmap:
 
-helm install yetibot . \
+helm install yetibot charts/yetibot \
   --namespace yetibot-test \
   --dry-run | grep ConfigMap -A30
 
@@ -155,7 +208,7 @@ If everything looks good, install (this example installs it in the `yetibot`
 namespace):
 
 ```bash
-helm upgrade -n yetibot -i yetibot .
+helm upgrade -n yetibot -i yetibot charts/yetibot
 ```
 
 ### Uninstall
@@ -183,7 +236,7 @@ kubectl run psql-postgresql-client --rm --tty -i --restart='Never' --namespace d
 
 ```bash
 
-helm upgrade -n yetibot -i yetibot .
+helm upgrade -n yetibot -i yetibot charts/yetibot
 
 helm -n yetibot delete yetibot
 
