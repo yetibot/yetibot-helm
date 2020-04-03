@@ -182,6 +182,9 @@ If you want to fully test out the Helm chart locally, you can use an existing
 cluster or run locally on
 [Minikube](https://kubernetes.io/docs/tasks/tools/install-minikube/).
 
+After installing
+
+
 ### Check the rendered templates with dry run
 
 ```bash
@@ -223,19 +226,16 @@ helm -n yetibot delete yetibot
 To get the password for the postgres database, run:
 
 ```bash
-export POSTGRES_PASSWORD=$(kubectl get secret --ns yetibot psql-postgresql -o jsonpath="{.data.postgresql-password}" | base64 --decode)
 
-# run a pod in cluster as a psql client:
-kubectl --ns yetibot run psql-postgresql-client \
-  --rm --tty -i --restart='Never' \
-  --image docker.io/bitnami/postgresql:11.7.0-debian-10-r51 \
-  --env="PGPASSWORD=$POSTGRES_PASSWORD" \
-  --command -- psql --host psql-postgresql -U yetibot -d yetibot -p 5432
+export POSTGRES_PASSWORD=$(kubectl get secret --namespace default psql-postgresql -o jsonpath="{.data.postgresql-password}" | base64 --decode)
+kubectl run psql-postgresql-client --rm --tty -i --restart='Never' --namespace default --image docker.io/bitnami/postgresql:11.7.0-debian-10-r51 --env="PGPASSWORD=$POSTGRES_PASSWORD" --command -- psql --host psql-postgresql -U yetibot -d yetibot -p 5432
+
 ```
 
 ### Cheat sheet
 
 ```bash
+
 helm upgrade -n yetibot -i yetibot charts/yetibot
 
 helm -n yetibot delete yetibot
@@ -258,4 +258,5 @@ kc exec -it yetibot-postgresql-0 sh
 # then inside the pod, verify psql:
 
 PGPASSWORD="$POSTGRES_PASSWORD" psql -U yetibot -d yetibot
+
 ```
