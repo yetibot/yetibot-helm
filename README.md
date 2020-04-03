@@ -166,7 +166,7 @@ helm repo add yetibot https://h.cfcr.io/devth/yetibot
 helm repo list
 helm lint
 
-helm push . yetibot
+helm push charts/yetibot yetibot
 ```
 
 You should see now see `yetibbot` in :
