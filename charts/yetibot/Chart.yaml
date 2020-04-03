@@ -2,6 +2,7 @@ apiVersion: v2
 description: Yetibot and its Postgresql dependency packaged as a Helm Chart
 name: yetibot
 icon: https://yetibot.com/img/yetibot_logo.svg
+home: https://github.com/yetibot/yetibot-helm
 maintainers:
   - name: Trevor Hartman
     url: https://devth.com
