@@ -71,22 +71,25 @@ affinity: {}
 
 # Yetibot config
 
-# Use env vars to populate any of Yetibot's configuration options
+# Use env vars to populate any of Yetibot's configuration options.
+#
 # See all options at:
 # https://github.com/yetibot/yetibot.core/blob/master/config/sample.env
+#
+# Note: the sample config uses `YETIBOT_` prefix where in this chart we use the
+# `YB_` prefix (we explain why below).
 
 yetibot:
   env:
-    # Ensure Yetibot ignores all `YETIBOT_` env vars, since Kubernetes will
-    # expose a bunch of them inside the pod. If you remove this, Yetibot will
-    # throw exceptions at runtime and the pod will CrashLoop.
+    # By default Yetibot picks up all YB_ and YETIBOT_ env vars. This is
+    # overridable by setting `YETIBOT_ENV_PREFIX`.
+    #
+    # In the context of running on Kuberenetes, we must ensure Yetibot ignores
+    # all `YETIBOT_` env vars, since by convention Kubernetes will expose a
+    # bunch of them inside the pod, unrelated to Yetibot's own config. If we
+    # don't override the env prefix, Yetibot will throw exceptions at runtime
+    # and the pod will CrashLoop.
     YETIBOT_ENV_PREFIX: yb
-    YB_ADAPTERS_MYIRC_TYPE: irc
-    YB_ADAPTERS_MYIRC_USERNAME: yetihelm
-    YB_ADAPTERS_MYIRC_HOST: chat.freenode.net
-    YB_ADAPTERS_MYIRC_PORT: "7070"
-    YB_ADAPTERS_MYIRC_SSL: "true"
-    YB_ADAPTERS_MYIRC_SSL: "true"
     YB_DB_URL: "jdbc:postgresql://yetibot:yetibot@yetibot-postgresql:5432/yetibot"
     # You must set this to the URL that you expose Yetibot on in order for the
     # dashboard to work
