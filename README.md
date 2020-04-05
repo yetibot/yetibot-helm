@@ -267,10 +267,18 @@ image:
 
 
 ```bash
+# poke around manually:
+docker run -it --rm --name ct \
+  --volume $(pwd):/data quay.io/helmpack/chart-testing:v2.3.0
 
+cd /data
+ct lint --all --config ct.yaml --debug
+
+
+# or run it all in one go:
 docker run -it --rm --name ct \
   --volume $(pwd):/data quay.io/helmpack/chart-testing:v2.3.0 \
-  sh -c "ct lint --all --debug --chart-dirs /data/"
+  sh -c "cd /data && ct lint --all --config ct.yaml --debug"
 
 ```
 

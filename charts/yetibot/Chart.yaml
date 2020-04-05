@@ -4,7 +4,7 @@ name: yetibot
 icon: https://yetibot.com/img/yetibot_logo.svg
 home: https://github.com/yetibot/yetibot-helm
 maintainers:
-  - name: Trevor Hartman
+  - name: devth
     url: https://devth.com
 dependencies:
   - name: postgresql
