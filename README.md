@@ -259,3 +259,19 @@ kc exec -it yetibot-postgresql-0 sh
 
 PGPASSWORD="$POSTGRES_PASSWORD" psql -U yetibot -d yetibot
 ```
+
+### Lint
+
+Use [`chart-testing`](https://github.com/helm/chart-testing/releases) Docker
+image:
+
+
+```bash
+
+docker run -it --rm --name ct \
+  --volume $(pwd):/data quay.io/helmpack/chart-testing:v2.3.0 \
+  sh -c "ct lint --all --debug --chart-dirs /data/"
+
+```
+
+
