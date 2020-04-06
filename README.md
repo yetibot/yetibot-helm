@@ -59,7 +59,6 @@ yetibot:
     YB_ADAPTERS_MYIRC_HOST: chat.freenode.net
     YB_ADAPTERS_MYIRC_PORT: "7070"
     YB_ADAPTERS_MYIRC_SSL: "true"
-    YB_ADAPTERS_MYIRC_SSL: "true"
 ```
 
 `values.yaml` demonstrates a few configuration options, but see
