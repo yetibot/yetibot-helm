@@ -59,7 +59,6 @@ yetibot:
     YB_ADAPTERS_MYIRC_HOST: chat.freenode.net
     YB_ADAPTERS_MYIRC_PORT: "7070"
     YB_ADAPTERS_MYIRC_SSL: "true"
-    YB_ADAPTERS_MYIRC_SSL: "true"
 ```
 
 `values.yaml` demonstrates a few configuration options, but see
@@ -259,3 +258,27 @@ kc exec -it yetibot-postgresql-0 sh
 
 PGPASSWORD="$POSTGRES_PASSWORD" psql -U yetibot -d yetibot
 ```
+
+### Lint
+
+Use [`chart-testing`](https://github.com/helm/chart-testing/releases) Docker
+image:
+
+
+```bash
+# poke around manually:
+docker run -it --rm --name ct \
+  --volume $(pwd):/data quay.io/helmpack/chart-testing:v2.3.0
+
+cd /data
+ct lint --all --config ct.yaml --debug
+
+
+# or run it all in one go:
+docker run -it --rm --name ct \
+  --volume $(pwd):/data quay.io/helmpack/chart-testing:v2.3.0 \
+  sh -c "cd /data && ct lint --all --config ct.yaml --debug"
+
+```
+
+
