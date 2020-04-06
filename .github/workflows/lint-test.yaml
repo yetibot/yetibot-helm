@@ -16,8 +16,16 @@ jobs:
         id: lint
         uses: helm/chart-testing-action@v1.0.0-rc.2
         with:
-          command: lint
           config: ct.yaml
+          command: lint
+
+      # PVC doesn't appear to work. postgresql chart fails with:
+      #
+      # postgresql 02:08:39.12 INFO  ==> Initializing PostgreSQL database...
+      # mkdir: cannot create directory ‘/bitnami/postgresql/data’: Permission denied
+      #
+      # Disable for now
+      #
 
       - name: Create kind cluster
         uses: helm/kind-action@v1.0.0-alpha.3
