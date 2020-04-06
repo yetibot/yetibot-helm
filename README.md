@@ -158,7 +158,8 @@ Now `helm push` will use the auth provided by codefresh CLI.
 helm plugin install https://github.com/chartmuseum/helm-push
 ```
 
-Push this chart up to CodeFresh (TODO move this to CI?):
+Push this chart up to CodeFresh (TODO move this to CI and maybe switch to the
+GitHub Action that releases to GitHub Pages):
 
 ```bash
 helm repo add yetibot https://h.cfcr.io/devth/yetibot
