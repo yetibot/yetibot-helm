@@ -3,7 +3,7 @@
 Yetibot Helm makes it easy to install Yetibot on a
 [Kubernetes](https://kubernetes.io/) cluster.
 
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/yetibot/yetibot-helm/Release Charts?label=RELEASE&style=for-the-badge)
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/yetibot/yetibot-helm/Release%20Charts?label=RELEASE&style=for-the-badge)
 ![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/yetibot/yetibot-helm?style=for-the-badge)
 
 ## Usage
