@@ -17,7 +17,7 @@ helm search repo yetibot
 helm repo remove yetibot
 ```
 
-To install (or upgrade if already installed):
+To install (or upgrade if already installed) in the `yeitbot` namespace:
 
 ```bash
 helm upgrade --ns yetibot -f values.yaml -i yetibot yetibot/yetibot
@@ -45,8 +45,9 @@ helm install . \
   yetibot/yetibot
 ```
 
-It's recommended to copy the default [values.yaml](values.yaml) and configure it
-locally.
+It's recommended to copy the default
+[values.yaml](https://github.com/yetibot/yetibot-helm/blob/master/charts/yetibot/values.yaml)
+and configure it locally.
 
 At a minimum you need to configure at least 1 adapter. For example, to connect
 to IRC you could set:
