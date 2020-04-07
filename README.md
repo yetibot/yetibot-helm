@@ -3,18 +3,18 @@
 Yetibot Helm makes it easy to install Yetibot on a
 [Kubernetes](https://kubernetes.io/) cluster.
 
-[Yetibot's Helm chart](https://g.codefresh.io/helm/charts/CF_HELM_YETIBOT/yetibot)
-is hosted on [CodeFresh](https://codefresh.io).
-
 ## Usage
 
 ```bash
 # add the yetibot helm chart repo
-helm repo add yetibot https://h.cfcr.io/devth/yetibot
+helm repo add yetibot https://yetibot.com/yetibot-helm/
 # update to get latest charts
 helm repo update
 # make sure yetibot chart is listed
 helm search repo yetibot
+
+# if you want to remove the repo:
+helm repo remove yetibot
 ```
 
 To install (or upgrade if already installed):
@@ -130,43 +130,17 @@ psql postgresql://yetibot:yetibot@localhost:6543/yetibot < $filename
 
 ## Dev setup
 
-### Helm chart on CodeFresh
-
-Use CodeFresh Helm Museum to host the repo following [these
-docs](https://codefresh.io/docs/docs/new-helm/managed-helm-repository/).
-
-### Authentication
-
-```bash
-yarn global add codefresh
-```
-
-Follow [these
-docs](https://codefresh.io/codefresh-news/introducing-codefresh-cli/) to setup
-the codefresh CLI, specifically authenticating with an `API_KEY`.
-
-```bash
-read -s api_key
-codefresh auth create-context --api-key $api_key
-```
-
-Now `helm push` will use the auth provided by codefresh CLI.
-
 ### Push chart
 
-```bash
-helm plugin install https://github.com/chartmuseum/helm-push
-```
+The chat is automatically pushed to the Chart repo on GitHub Pages on every
+master build, using the [chart-releaser-action](https://github.com/helm/chart-releaser-action)
+for GitHub.
 
-Push this chart up to CodeFresh (TODO move this to CI and maybe switch to the
-GitHub Action that releases to GitHub Pages):
+### Lint
 
 ```bash
-helm repo add yetibot https://h.cfcr.io/devth/yetibot
 helm repo list
 helm lint
-
-helm push charts/yetibot yetibot
 ```
 
 You should see now see `yetibbot` in :
@@ -260,7 +234,7 @@ kc exec -it yetibot-postgresql-0 sh
 PGPASSWORD="$POSTGRES_PASSWORD" psql -U yetibot -d yetibot
 ```
 
-### Lint
+### Lint with ct
 
 Use [`chart-testing`](https://github.com/helm/chart-testing/releases) Docker
 image:
@@ -274,12 +248,8 @@ docker run -it --rm --name ct \
 cd /data
 ct lint --all --config ct.yaml --debug
 
-
 # or run it all in one go:
 docker run -it --rm --name ct \
   --volume $(pwd):/data quay.io/helmpack/chart-testing:v2.3.0 \
   sh -c "cd /data && ct lint --all --config ct.yaml --debug"
-
 ```
-
-
