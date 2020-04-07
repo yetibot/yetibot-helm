@@ -3,18 +3,18 @@
 Yetibot Helm makes it easy to install Yetibot on a
 [Kubernetes](https://kubernetes.io/) cluster.
 
-[Yetibot's Helm chart](https://g.codefresh.io/helm/charts/CF_HELM_YETIBOT/yetibot)
-is hosted on [CodeFresh](https://codefresh.io).
-
 ## Usage
 
 ```bash
 # add the yetibot helm chart repo
-helm repo add yetibot https://h.cfcr.io/devth/yetibot
+helm repo add yetibot https://yetibot.com/yetibot-helm/
 # update to get latest charts
 helm repo update
 # make sure yetibot chart is listed
 helm search repo yetibot
+
+# if you want to remove the repo:
+helm repo remove yetibot
 ```
 
 To install (or upgrade if already installed):
@@ -58,7 +58,6 @@ yetibot:
     YB_ADAPTERS_MYIRC_USERNAME: yetihelm
     YB_ADAPTERS_MYIRC_HOST: chat.freenode.net
     YB_ADAPTERS_MYIRC_PORT: "7070"
-    YB_ADAPTERS_MYIRC_SSL: "true"
     YB_ADAPTERS_MYIRC_SSL: "true"
 ```
 
@@ -131,42 +130,17 @@ psql postgresql://yetibot:yetibot@localhost:6543/yetibot < $filename
 
 ## Dev setup
 
-### Helm chart on CodeFresh
-
-Use CodeFresh Helm Museum to host the repo following [these
-docs](https://codefresh.io/docs/docs/new-helm/managed-helm-repository/).
-
-### Authentication
-
-```bash
-yarn global add codefresh
-```
-
-Follow [these
-docs](https://codefresh.io/codefresh-news/introducing-codefresh-cli/) to setup
-the codefresh CLI, specifically authenticating with an `API_KEY`.
-
-```bash
-read -s api_key
-codefresh auth create-context --api-key $api_key
-```
-
-Now `helm push` will use the auth provided by codefresh CLI.
-
 ### Push chart
 
-```bash
-helm plugin install https://github.com/chartmuseum/helm-push
-```
+The chat is automatically pushed to the Chart repo on GitHub Pages on every
+master build, using the [chart-releaser-action](https://github.com/helm/chart-releaser-action)
+for GitHub.
 
-Push this chart up to CodeFresh (TODO move this to CI?):
+### Lint
 
 ```bash
-helm repo add yetibot https://h.cfcr.io/devth/yetibot
 helm repo list
 helm lint
-
-helm push charts/yetibot yetibot
 ```
 
 You should see now see `yetibbot` in :
@@ -181,9 +155,6 @@ helm search repo
 If you want to fully test out the Helm chart locally, you can use an existing
 cluster or run locally on
 [Minikube](https://kubernetes.io/docs/tasks/tools/install-minikube/).
-
-After installing
-
 
 ### Check the rendered templates with dry run
 
@@ -226,16 +197,19 @@ helm -n yetibot delete yetibot
 To get the password for the postgres database, run:
 
 ```bash
+export POSTGRES_PASSWORD=$(kubectl get secret --ns yetibot psql-postgresql -o jsonpath="{.data.postgresql-password}" | base64 --decode)
 
-export POSTGRES_PASSWORD=$(kubectl get secret --namespace default psql-postgresql -o jsonpath="{.data.postgresql-password}" | base64 --decode)
-kubectl run psql-postgresql-client --rm --tty -i --restart='Never' --namespace default --image docker.io/bitnami/postgresql:11.7.0-debian-10-r51 --env="PGPASSWORD=$POSTGRES_PASSWORD" --command -- psql --host psql-postgresql -U yetibot -d yetibot -p 5432
-
+# run a pod in cluster as a psql client:
+kubectl --ns yetibot run psql-postgresql-client \
+  --rm --tty -i --restart='Never' \
+  --image docker.io/bitnami/postgresql:11.7.0-debian-10-r51 \
+  --env="PGPASSWORD=$POSTGRES_PASSWORD" \
+  --command -- psql --host psql-postgresql -U yetibot -d yetibot -p 5432
 ```
 
 ### Cheat sheet
 
 ```bash
-
 helm upgrade -n yetibot -i yetibot charts/yetibot
 
 helm -n yetibot delete yetibot
@@ -258,5 +232,24 @@ kc exec -it yetibot-postgresql-0 sh
 # then inside the pod, verify psql:
 
 PGPASSWORD="$POSTGRES_PASSWORD" psql -U yetibot -d yetibot
+```
 
+### Lint with ct
+
+Use [`chart-testing`](https://github.com/helm/chart-testing/releases) Docker
+image:
+
+
+```bash
+# poke around manually:
+docker run -it --rm --name ct \
+  --volume $(pwd):/data quay.io/helmpack/chart-testing:v2.3.0
+
+cd /data
+ct lint --all --config ct.yaml --debug
+
+# or run it all in one go:
+docker run -it --rm --name ct \
+  --volume $(pwd):/data quay.io/helmpack/chart-testing:v2.3.0 \
+  sh -c "cd /data && ct lint --all --config ct.yaml --debug"
 ```
