@@ -1,5 +1,3 @@
-# Yetibot Helm
-
 Yetibot Helm makes it easy to install Yetibot on a
 [Kubernetes](https://kubernetes.io/) cluster.
 
