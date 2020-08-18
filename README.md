@@ -30,14 +30,16 @@ helm upgrade --ns yetibot -f values.yaml -i yetibot yetibot/yetibot
 
 Yetibot requires a Postgres instance, and specifies the
 [bitnami/postgresql](https://github.com/bitnami/charts/tree/master/bitnami/postgresql/)
-chart as a dependency. It is configured in `values.yaml`, which can be overriden.
+chart as a dependency. It is configured in `values.yaml`, which can be overridden.
 
 ## Configuration
 
 Though Yetibot can be configured via both environment vars or EDN, this chart
 only exposes ENV-based configuration for simplicity. Env vars are settable in
-`values.yaml`, which means you can set your own values override via all
-available mechanisms that helm provides (typically `--set` or `-f values.yaml`).
+`values.yaml` (which flow into a ConfigMap), which means you can set your own
+values override via all available mechanisms that helm provides (typically
+`--set` or `-f values.yaml`). Alternatively, you can edit the `yetibot` secret
+and specify all configuration values.
 
 Every key/value pair is settable under `yetibot.env`, e.g.:
 
@@ -196,6 +198,18 @@ helm -n yetibot delete yetibot
 
 *NB*: This does not delete PVCs. You can clean those up using `kubectl delete`.
 
+### Development
+
+It's sometimes useful to install the chart from the local repo during dev:
+
+```bash
+
+helm install yetibot . \
+  --namespace yetibot-test \
+  --dry-run
+
+```
+
 ### Postgres
 
 To get the password for the postgres database, run:
@@ -214,6 +228,7 @@ kubectl --ns yetibot run psql-postgresql-client \
 ### Cheat sheet
 
 ```bash
+# install from local repo
 helm upgrade -n yetibot -i yetibot charts/yetibot
 
 helm -n yetibot delete yetibot
