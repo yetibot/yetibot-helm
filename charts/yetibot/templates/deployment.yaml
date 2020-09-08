@@ -14,6 +14,9 @@ spec:
       annotations:
         # roll new pods when config changes
         checksum/config: {{ include (print $.Template.BasePath "/config.yaml") . | sha256sum }}
+      {{- with .Values.deployment.annotations }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       labels:
         {{- include "yetibot.selectorLabels" . | nindent 8 }}
     spec:
