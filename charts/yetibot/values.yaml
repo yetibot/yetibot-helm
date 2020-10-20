@@ -72,6 +72,8 @@ tolerations: []
 
 affinity: {}
 
+# Configure extra manifests to be deployed, such as secrets
+extraManifests: []
 
 # Yetibot config
 
