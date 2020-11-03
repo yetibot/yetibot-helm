@@ -19,6 +19,6 @@ jobs:
 
       # Note: this will fail unless app version was bumped
       - name: Run chart-releaser
-        uses: helm/chart-releaser-action@v1.0.0-rc.2
+        uses: helm/chart-releaser-action@1.0.0
         env:
           CR_TOKEN: "${{ secrets.CR_TOKEN }}"

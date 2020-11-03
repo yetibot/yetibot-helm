@@ -15,4 +15,6 @@ jobs:
         uses: actions/checkout@v1
 
       - name: debug
-        run: echo ${{ github.event.client_payload.message.docker_tag }}
+        run: |
+          sed -i "s/^version.*$/version: ${{ github.event.client_payload.message.yb_version }}/" charts/yetibot/Chart.yaml
+          git diff
