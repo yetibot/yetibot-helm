@@ -5,10 +5,10 @@ name: Handle repository dispatch events
 # version bump
 on:
   repository_dispatch:
-    types: [release]
+    types: [bump]
 
 jobs:
-  release:
+  bump:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
