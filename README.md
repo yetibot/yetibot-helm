@@ -272,3 +272,15 @@ docker run -it --rm --name ct \
   --volume $(pwd):/data quay.io/helmpack/chart-testing:v2.3.0 \
   sh -c "cd /data && ct lint --all --config ct.yaml --debug"
 ```
+
+
+### sed scratch
+
+```bash
+
+sed -i "s/^version.*$/version: x.y.z/" charts/yetibot/Chart.yaml
+sed -i -e 's/few/asd/g'
+sed -i 's/^(version: )([0-9]+)\.([0-9]+)\.([0-9]+)/echo version: \2.\3.$((\4+1))/ge' charts/yetibot/Chart.yaml
+sed -i -r 's/^version: ([0-9]+)\.([0-9]+)\.([0-9]+)/echo version: \1.\2.$((\3+1))/ge' charts/yetibot/Chart.yaml
+
+```
