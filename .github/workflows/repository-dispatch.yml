@@ -17,6 +17,6 @@ jobs:
       - name: debug
         run: |
           sed -i "s/^appVersion.*$/appVersion: ${{ github.event.client_payload.message.yb_version }}/" charts/yetibot/Chart.yaml
-          # auto bump patch version:
-          sed -i "s/^(version: )([0-9]+)\.([0-9]+)\.([0-9]+)/echo version: \2.\3.$((\4+1))/ge" charts/yetibot/Chart.yaml
+          # auto bump patch version (note: single quotes required):
+          sed -i 's/^(version: )([0-9]+)\.([0-9]+)\.([0-9]+)/echo version: \2.\3.$((\4+1))/ge' charts/yetibot/Chart.yaml
           git diff
