@@ -16,5 +16,5 @@ jobs:
 
       - name: debug
         run: |
-          sed -i "s/^version.*$/version: ${{ github.event.client_payload.message.yb_version }}/" charts/yetibot/Chart.yaml
+          sed -i "s/^appVersion.*$/appVersion: ${{ github.event.client_payload.message.yb_version }}/" charts/yetibot/Chart.yaml
           git diff
