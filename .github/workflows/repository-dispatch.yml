@@ -22,5 +22,8 @@ jobs:
           git diff
           git add charts/yetibot/Chart.yaml
           git commit -m 'Use yetibot ${{ github.event.client_payload.message.yb_version }}'
+
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
           git push
 
