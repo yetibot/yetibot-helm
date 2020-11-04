@@ -13,6 +13,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+        # must fetch all history so that CR can compare latest tag to current
+        # commit. otherwise it will skip releasing, e.g.:
+        # > Looking up latest tag...
+        # > Discovering changed charts since '5018edb0c13cd99925cbfc417f78433eb3fc26af'...
+        # > Nothing to do. No chart changes detected.
+        # from https://github.com/yetibot/yetibot-helm/runs/1353828038
+        with:
+          fetch-depth: 0
 
       - name: Configure Git
         run: |
