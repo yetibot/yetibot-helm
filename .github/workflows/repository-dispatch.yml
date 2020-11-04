@@ -13,6 +13,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.YETIBOT_GITHUB_TOKEN}}
 
       - name: Bump!
         run: |
