@@ -104,6 +104,10 @@ yetibot:
     # Only log to stdout
     YB_LOG_ROLLING_ENABLED: true
 
+  # set this in an extra values file - to ensure keys in this, overrides keys set in env. The result is merged with env into configmap.
+  overrideenv:
+
+
 # postgresql sub chart config:
 postgresql:
   persistence:

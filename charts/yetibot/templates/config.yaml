@@ -7,6 +7,8 @@ metadata:
 data:
   # Sample Yetibot config. Populate these values (at minimum configure an
   # adapter) with your own config or secrets.
-  {{- range $key, $value := .Values.yetibot.env }}
+  # merge env and overrideenv - ensuring keys from env - which are in overrideenv are overridden
+  {{- $env := mergeOverwrite .Values.yetibot.env .Values.yetibot.overrideenv }}
+  {{- range $key, $value := $env }}
     {{ $key }}: "{{ $value }}"
   {{- end }}
