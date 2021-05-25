@@ -77,7 +77,7 @@ affinity: {}
 extraManifests: []
 
 # Manage `yetibot` secret (set to false if you populate this secret some other way (like using sealed-secrets, vault etc.)
-manage_secrets: true
+manageSecrets: true
 
 # Yetibot config
 
