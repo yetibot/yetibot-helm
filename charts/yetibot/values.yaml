@@ -100,7 +100,9 @@ yetibot:
     YB_DB_URL: "jdbc:postgresql://yetibot:yetibot@yetibot-postgresql:5432/yetibot"
     # You must set this to the URL that you expose Yetibot on in order for the
     # dashboard to work
-    YB_URL: ""
+    # This default enables you to do: kubectl port-forward -n yetibot svc/yetibot 3003:3003
+    # and then you can view dashboard in your local browser on http://localhost:3003
+    YB_URL: "http://localhost:3003"
     # Only log to stdout
     YB_LOG_ROLLING_ENABLED: true
 
