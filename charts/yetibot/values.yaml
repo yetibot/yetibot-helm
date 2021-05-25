@@ -76,6 +76,9 @@ affinity: {}
 # Configure extra manifests to be deployed, such as secrets
 extraManifests: []
 
+# Manage `yetibot` secret (set to false if you populate this secret some other way (like using sealed-secrets, vault etc.)
+manageSecrets: true
+
 # Yetibot config
 
 # Use env vars to populate any of Yetibot's configuration options.
