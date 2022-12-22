@@ -87,6 +87,9 @@ Now connect to Postgres at:
 
 ```bash
 postgresql://yetibot:yetibot@localhost:6543/yetibot
+
+# e.g.
+psql postgresql://yetibot:yetibot@localhost:6543/yetibot
 ```
 
 NB: if you changed the credentials update them in the connection string above.
@@ -124,6 +127,8 @@ filename="$timestamp-yetibot-backup.sql"
 echo $filename
 pg_dump postgresql://yetibot:yetibot@localhost:6543/yetibot > "$filename"
 ```
+
+Update credentials as needed.
 
 ### Database restore
 
