@@ -23,7 +23,7 @@ helm repo remove yetibot
 To install (or upgrade if already installed):
 
 ```bash
-helm upgrade --ns yetibot -f values.yaml -i yetibot yetibot/yetibot
+helm upgrade -f values.yaml -i yetibot yetibot/yetibot
 ```
 
 ## Postgres
@@ -80,7 +80,7 @@ we're using `6543` instead of standard `5432` in order to not interfere with any
 local Postgres instance you may be running:
 
 ```bash
-kubectl --ns yetibot port-forward yetibot-postgresql-0 6543:5432
+kubectl port-forward yetibot-postgresql-0 6543:5432
 ```
 
 Now connect to Postgres at:
@@ -201,7 +201,7 @@ If you want to delete all resources:
 helm -n yetibot delete yetibot
 ```
 
-*NB*: This does not delete PVCs. You can clean those up using `kubectl delete`.
+_NB_: This does not delete PVCs. You can clean those up using `kubectl delete`.
 
 ### Development
 
@@ -220,10 +220,10 @@ helm install yetibot . \
 To get the password for the postgres database, run:
 
 ```bash
-export POSTGRES_PASSWORD=$(kubectl get secret --ns yetibot psql-postgresql -o jsonpath="{.data.postgresql-password}" | base64 --decode)
+export POSTGRES_PASSWORD=$(kubectl get secret psql-postgresql -o jsonpath="{.data.postgresql-password}" | base64 --decode)
 
 # run a pod in cluster as a psql client:
-kubectl --ns yetibot run psql-postgresql-client \
+kubectl run psql-postgresql-client \
   --rm --tty -i --restart='Never' \
   --image docker.io/bitnami/postgresql:11.7.0-debian-10-r51 \
   --env="PGPASSWORD=$POSTGRES_PASSWORD" \
@@ -263,7 +263,6 @@ PGPASSWORD="$POSTGRES_PASSWORD" psql -U yetibot -d yetibot
 Use [`chart-testing`](https://github.com/helm/chart-testing/releases) Docker
 image:
 
-
 ```bash
 # poke around manually:
 docker run -it --rm --name ct \
@@ -277,7 +276,6 @@ docker run -it --rm --name ct \
   --volume $(pwd):/data quay.io/helmpack/chart-testing:v2.3.0 \
   sh -c "cd /data && ct lint --all --config ct.yaml --debug"
 ```
-
 
 ### sed scratch
 
