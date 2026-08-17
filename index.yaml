@@ -2,6 +2,25 @@ apiVersion: v1
 entries:
   yetibot:
   - apiVersion: v2
+    appVersion: 20260817.200306.7d90085
+    created: "2026-08-17T20:06:32.876034002Z"
+    dependencies:
+    - name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 12.1.6
+    description: Yetibot and its Postgresql dependency packaged as a Helm Chart
+    digest: bca6faee4c0dbdf8589f3d461e243e2a28a7527d5f8cd4ef954b3dfa4d6aaa13
+    home: https://github.com/yetibot/yetibot-helm
+    icon: https://yetibot.com/img/yetibot_logo.svg
+    maintainers:
+    - name: devth
+      url: https://devth.com
+    name: yetibot
+    type: application
+    urls:
+    - https://github.com/yetibot/yetibot-helm/releases/download/yetibot-1.0.218/yetibot-1.0.218.tgz
+    version: 1.0.218
+  - apiVersion: v2
     appVersion: 20260814.224951.aef6c7a
     created: "2026-08-14T22:53:49.959877807Z"
     dependencies:
